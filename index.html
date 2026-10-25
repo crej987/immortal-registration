@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Immortal | Registration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;1,500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07060c;
+    --card: #110e1c;
+    --ink: #efeaff;
+    --muted: #a79ec6;
+    --line: #2c2548;
+    --accent: #f2a33a;
+    --accent-ink: #1c1230;
+    --ring-a: #f2a33a;
+    --ring-b: #8b6fd1;
+    --error: #ff8a80;
+    --ok: #6fdba5;
+    color-scheme: dark;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { height: 100%; }
+  body {
+    min-height: 100%;
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    display: grid;
+    place-items: center;
+    padding: 24px 16px;
+    overflow-x: hidden;
+  }
+
+  .stage { position: relative; width: 100%; max-width: 400px; }
+
+  .eclipse {
+    position: absolute;
+    left: 50%; top: -58px;
+    width: 340px; height: 340px;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    animation: rise 1.6s ease-out 0.1s forwards;
+  }
+  .eclipse .corona { transform-origin: 50% 50%; animation: turn 60s linear infinite; }
+  @keyframes rise { to { opacity: 1; } }
+  @keyframes turn { to { transform: rotate(360deg); } }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 40px 32px 32px;
+    margin-top: 232px;
+  }
+
+  h1 {
+    font-family: "Bodoni Moda", Georgia, "Times New Roman", serif;
+    font-weight: 500;
+    font-size: 44px;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    margin: 0 0 6px;
+    text-align: center;
+  }
+  .sub {
+    margin: 0 0 28px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  .field { margin-bottom: 18px; }
+  label {
+    display: block;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  input, select {
+    width: 100%;
+    font: inherit;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 12px 14px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input::placeholder { color: var(--muted); opacity: .7; }
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    padding-right: 40px;
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+      linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position: calc(100% - 20px) 50%, calc(100% - 14px) 50%;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+  }
+  select:invalid { color: var(--muted); }
+  select option { background: var(--card); color: var(--ink); }
+  input:hover, select:hover { border-color: var(--muted); }
+  input:focus-visible, select:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  input[aria-invalid="true"], select[aria-invalid="true"] { border-color: var(--error); }
+  input[type="date"] { min-height: 47px; }
+
+  .error {
+    min-height: 18px;
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: var(--error);
+  }
+
+  .submit {
+    width: 100%;
+    margin-top: 6px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--accent-ink);
+    background: var(--accent);
+    border: 0;
+    border-radius: 4px;
+    padding: 13px 16px;
+    cursor: pointer;
+    transition: filter .15s, transform .1s;
+  }
+  .submit:hover { filter: brightness(1.06); }
+  .submit:active { transform: translateY(1px); }
+  .submit:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+  .submit[disabled] { opacity: .6; cursor: progress; }
+
+  .status {
+    margin: 16px 0 0;
+    min-height: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--ok);
+  }
+  .status.bad { color: var(--error); }
+
+  @media (max-width: 420px) {
+    .card { padding: 32px 20px 24px; }
+    h1 { font-size: 38px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .eclipse { animation: none; opacity: 1; }
+    .eclipse .corona { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <main class="stage">
+    <svg class="eclipse" viewBox="0 0 340 340" aria-hidden="true">
+      <defs>
+        <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+          <stop offset="62%" stop-color="var(--ring-a)" stop-opacity="0"/>
+          <stop offset="74%" stop-color="var(--ring-a)" stop-opacity=".55"/>
+          <stop offset="100%" stop-color="var(--ring-b)" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="arc" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="var(--ring-a)"/>
+          <stop offset="100%" stop-color="var(--ring-b)"/>
+        </linearGradient>
+        <radialGradient id="moon" cx="36%" cy="32%" r="80%">
+          <stop offset="0%" stop-color="#fffaf0"/>
+          <stop offset="55%" stop-color="#ddd6ea"/>
+          <stop offset="100%" stop-color="#a79fc2"/>
+        </radialGradient>
+        <radialGradient id="shade" cx="30%" cy="28%" r="85%">
+          <stop offset="55%" stop-color="#07060c" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#07060c" stop-opacity=".55"/>
+        </radialGradient>
+      </defs>
+      <circle cx="170" cy="170" r="130" fill="url(#glow)"/>
+      <g class="corona" fill="none" stroke="url(#arc)" stroke-linecap="round">
+        <circle cx="170" cy="170" r="88" stroke-width="2" stroke-dasharray="440 113"/>
+        <circle cx="170" cy="170" r="100" stroke-width="1" stroke-dasharray="78 34 26 52" opacity=".7"/>
+        <circle cx="170" cy="170" r="112" stroke-width="1" stroke-dasharray="12 18" opacity=".5"/>
+      </g>
+      <g>
+        <circle cx="170" cy="170" r="72" fill="url(#moon)"/>
+        <circle cx="146" cy="150" r="13" fill="#7d7498" opacity=".28"/>
+        <circle cx="190" cy="186" r="17" fill="#7d7498" opacity=".24"/>
+        <circle cx="160" cy="196" r="7" fill="#7d7498" opacity=".28"/>
+        <circle cx="194" cy="146" r="8" fill="#7d7498" opacity=".22"/>
+        <circle cx="170" cy="170" r="72" fill="url(#shade)"/>
+      </g>
+    </svg>
+
+    <section class="card" aria-labelledby="title">
+      <h1 id="title">Immortal</h1>
+      <p class="sub">Enter your character details.</p>
+
+      <form id="register" novalidate>
+        <div class="field">
+          <label for="ign">IGN</label>
+          <input id="ign" name="IGN" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Your in-game name" aria-describedby="ign-error" required>
+          <p class="error" id="ign-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="level">Level</label>
+          <input id="level" name="Level" type="text" inputmode="numeric" autocomplete="off" placeholder="Your character level" aria-describedby="level-error" required>
+          <p class="error" id="level-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="power">Power</label>
+          <input id="power" name="Power" type="text" inputmode="numeric" autocomplete="off" placeholder="Your total power" aria-describedby="power-error" required>
+          <p class="error" id="power-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="class">Class</label>
+          <select id="class" name="Class" aria-describedby="class-error" required>
+          <option value="" disabled selected>Select your class</option>
+          <option value="BOW">BOW</option>
+          <option value="TWIN SWORD">TWIN SWORD</option>
+          <option value="MAGE">MAGE</option>
+          <option value="SPEAR">SPEAR</option>
+          <option value="SHIELDER">SHIELDER</option>
+          <option value="CLERIC">CLERIC</option>
+          <option value="GAUNLET">GAUNLET</option>
+          <option value="GENERAL">GENERAL</option>
+        </select>
+          <p class="error" id="class-error" role="alert"></p>
+        </div>
+
+        <div class="field">
+          <label for="regdate">Date of registration</label>
+          <input id="regdate" name="Date of Registration" type="date" aria-describedby="regdate-error" required>
+          <p class="error" id="regdate-error" role="alert"></p>
+        </div>
+
+        <button class="submit" type="submit" id="submit">Submit</button>
+        <p class="status" id="status" role="status"></p>
+      </form>
+    </section>
+  </main>
+
+<script>
+  (function () {
+    // Paste your Google Apps Script web app link between the quotes to save entries to a sheet.
+    // Leave it empty to only test the form on your computer.
+    var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxubPQEcBWLrM-a31sKQ5_9YMFxaUauuSerC0CJeq-ozTPoEpmWZH-FY6-2CzSL-u6e/exec';
+
+    var form = document.getElementById('register');
+    var status = document.getElementById('status');
+    var button = document.getElementById('submit');
+
+    var fields = {
+      ign:   { input: document.getElementById('ign'),   error: document.getElementById('ign-error') },
+      level: { input: document.getElementById('level'), error: document.getElementById('level-error') },
+      power: { input: document.getElementById('power'), error: document.getElementById('power-error') },
+      cls:   { input: document.getElementById('class'), error: document.getElementById('class-error') },
+      date:  { input: document.getElementById('regdate'), error: document.getElementById('regdate-error') }
+    };
+
+    // Fill in today's date (local time). People can still change it.
+    function setToday() {
+      var d = new Date();
+      var month = String(d.getMonth() + 1).padStart(2, '0');
+      var day = String(d.getDate()).padStart(2, '0');
+      fields.date.input.value = d.getFullYear() + '-' + month + '-' + day;
+    }
+    setToday();
+
+    function setError(key, msg) {
+      var f = fields[key];
+      f.error.textContent = msg;
+      if (msg) f.input.setAttribute('aria-invalid', 'true');
+      else f.input.removeAttribute('aria-invalid');
+    }
+
+    Object.keys(fields).forEach(function (key) {
+      fields[key].input.addEventListener('input', function () { setError(key, ''); });
+      fields[key].input.addEventListener('change', function () { setError(key, ''); });
+    });
+
+    function toNumber(text) {
+      var cleaned = text.replace(/[,\s]/g, '');
+      return /^\d+$/.test(cleaned) ? Number(cleaned) : NaN;
+    }
+
+    function showStatus(msg, bad) {
+      status.textContent = msg;
+      status.classList.toggle('bad', !!bad);
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      showStatus('');
+
+      var ign = fields.ign.input.value.trim();
+      var level = toNumber(fields.level.input.value);
+      var power = toNumber(fields.power.input.value);
+      var cls = fields.cls.input.value.trim();
+      var regDate = fields.date.input.value;
+      var firstBad = null;
+
+      function check(key, bad, msg) {
+        setError(key, bad ? msg : '');
+        if (bad && !firstBad) firstBad = fields[key].input;
+      }
+
+      check('ign', !ign, 'Enter your IGN.');
+      check('level', isNaN(level) || level < 1, 'Enter your level as a whole number.');
+      check('power', isNaN(power), 'Enter your power as a whole number.');
+      check('cls', !cls, 'Select your class.');
+      check('date', !regDate, 'Choose your date of registration.');
+
+      if (firstBad) { firstBad.focus(); return; }
+
+      var data = new FormData();
+      data.append('IGN', ign);
+      data.append('Level', level);
+      data.append('Power', power);
+      data.append('Class', cls);
+      data.append('Date of Registration', regDate);
+
+      if (!SHEET_URL) {
+        showStatus('Form works. Add your sheet link in the script to save entries.');
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = 'Submitting...';
+
+      fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: data })
+        .then(function () {
+          showStatus('Submitted. Thank you, ' + ign + '.');
+          form.reset();
+          setToday();
+          fields.ign.input.focus();
+        })
+        .catch(function () {
+          showStatus('Could not submit. Check your connection and try again.', true);
+        })
+        .then(function () {
+          button.disabled = false;
+          button.textContent = 'Submit';
+        });
+    });
+  })();
+</script>
+</body>
+</html>
